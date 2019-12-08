@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+   
+</head>
+<body>
+    <div class="name"></div>   
+    <input type="text" class='url'>
+    <input type="text" class='selector'>   
+    <button type="button">Send</button>
+    <div class="article"></div>
+    <script>
+        const socket = io('http://localhost:3000');
+            document.querySelector('button').addEventListener('click', () => {
+                const url = document.querySelector(".url").value;
+                const selector = document.querySelector(".selector").value;
+                socket.emit('new-msg', {url:url, selector:selector});                
+            });
+            socket.on('msg',(data)=>{
+                console.log(data)                             
+                document.querySelector('.name').innerHTML+= "url:"+" "+data.url+ "<br />"+"selector:"+" "+data.selector;
+                socket.emit('article', data);
+            });
+            socket.on('news',(data)=>{ 
+                console.log(data)               
+                document.querySelector('.article').innerHTML+="all articles:"+"<br />"+data;
+            });
+        
+    </script>
+</body>
+</html>
